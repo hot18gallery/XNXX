@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 Videos - ProneTube</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 10px;
+    }
+    .video-block {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+    }
+    iframe {
+      width: 100%;
+      height: 360px;
+      border: none;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+    .controls button {
+      margin-right: 10px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      background: #eee;
+      cursor: pointer;
+    }
+    .controls button:hover {
+      background: #ddd;
+    }
+    .comment-box, .share-box {
+      display: none;
+      margin-top: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+    }
+    input[type="text"] {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  let likeCounts = Array(11).fill(0).map((_, i) => 1000 + i * 100);
+  function handleLike(id) {
+    likeCounts[id]++;
+    const count = likeCounts[id] >= 1000 ? (likeCounts[id]/1000).toFixed(1)+'k' : likeCounts[id];
+    document.getElementById('likeCount'+id).innerText = count;
+  }
+  function toggleCommentBox(id) {
+    const el = document.getElementById('commentBox'+id);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+  function toggleShare(id) {
+    const el = document.getElementById('shareBox'+id);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+  function sendComment(id) {
+    const input = document.getElementById('commentInput'+id);
+    const comment = input.value.trim();
+    if (comment !== '') {
+      const list = document.getElementById('commentList'+id);
+      const p = document.createElement('p');
+      p.innerText = comment;
+      list.prepend(p);
+      input.value = '';
+    }
+  }
+  function copyLink(id) {
+    const input = document.getElementById('shareLink'+id);
+    input.select();
+    input.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    alert('Link copied!');
+  }
+</script>
+
+<!-- Video Blocks -->
+<script>
+  const links = [
+    "1WQaH0M8X0dJ7SYS3sEVN9wVbXX3Y3Kab",
+    "1WQ8PbV9qeAz4KDS6z2bCA4dQIadExm_S",
+    "1Wc-sgU-2vvwBNB17VAPuX-jruqkShM2m",
+    "1WRU-NQ1RKTzLBV7UZ8Oc5HpfBsg1mOyz",
+    "1WiY9oJc4VCir-88VlHkmi36eykyxCcHZ",
+    "1WbktqPQemcfcL3ys-OaObpRsJ1PX8_KP",
+    "1WluAJoePAseWObdVdTkyxhuO0E2RkZ2K",
+    "1WcVDbdZNy1kYWzEyZZ0Gilnk0UM3BbWK",
+    "1WcQgbnGrTyuNbm0dCysQsYOk0LmPzXX1",
+    "1WSmlQ2UVnrCiB-ejaFSf1GFhhxLj6O6S"
+  ];
+  for (let i = 0; i < links.length; i++) {
+    document.write(`
+      <div class="video-block">
+        <iframe src="https://drive.google.com/file/d/${links[i]}/preview" allow="autoplay"></iframe>
+        <div class="controls">
+          <button onclick="handleLike(${i+1})">👍 Like <span id="likeCount${i+1}">${likeCounts[i+1]}</span></button>
+          <button onclick="toggleCommentBox(${i+1})">💬 Comment</button>
+          <button onclick="toggleShare(${i+1})">🔗 Share</button>
+        </div>
+        <div id="commentBox${i+1}" class="comment-box">
+          <textarea id="commentInput${i+1}" placeholder="Write a comment..."></textarea>
+          <button onclick="sendComment(${i+1})">Send</button>
+          <div id="commentList${i+1}" style="margin-top:10px;"></div>
+        </div>
+        <div id="shareBox${i+1}" class="share-box">
+          <input id="shareLink${i+1}" type="text" value="https://drive.google.com/file/d/${links[i]}/view" readonly />
+          <button onclick="copyLink(${i+1})">📋 Copy Link</button>
+          <div style="margin-top:10px;">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://drive.google.com/file/d/${links[i]}/view" target="_blank">📘 Facebook</a> |
+            <a href="https://api.whatsapp.com/send?text=https://drive.google.com/file/d/${links[i]}/view" target="_blank">🟢 WhatsApp</a> |
+            <a href="https://twitter.com/intent/tweet?url=https://drive.google.com/file/d/${links[i]}/view" target="_blank">🐦 Twitter</a>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+</script>
+
+</body>
+</html>
